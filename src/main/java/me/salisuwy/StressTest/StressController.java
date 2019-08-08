@@ -22,14 +22,17 @@ public class StressController {
         String url="http://localhost:8080/credits/loans/2710620/grant_refunds";
         String json=new Gson().toJson(grantRefundCreationCommand);
         CompletableFuture<String> partialResponse = null;
+
         System.out.println(threads);
         System.out.println(delay);
+
         for (int i = 0; i < threads; i++) {
             partialResponse = CompletableFuture.supplyAsync(()->{
                 return readUrl(url,json);
             });
             Thread.sleep(delay);
         }
+
        return partialResponse != null ? partialResponse.get() : null;
     }
     private static String readUrl(String urlString, String json){
