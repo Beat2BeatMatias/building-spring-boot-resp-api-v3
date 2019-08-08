@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 public class StressController {
+
     @PostMapping(value = "/stress/thread/{threads}/delay/{delay}", produces = "application/json; charset=utf-8")
     public String stress(@PathVariable("delay") int delay, @PathVariable("threads") int threads, @RequestBody GrantRefundCreationCommand grantRefundCreationCommand, HttpServletRequest request) throws ExecutionException, InterruptedException {
         String url="http://localhost:8080/credits/loans/2710620/grant_refunds";
