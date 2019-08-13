@@ -18,14 +18,15 @@ import java.util.concurrent.ExecutionException;
 @RestController
 public class StressController {
 
-    @PostMapping(value = "/stress/thread/{threads}/delay/{delay}", produces = "application/json; charset=utf-8")
-    public String stress(@PathVariable("delay") int delay, @PathVariable("threads") int threads, @RequestBody GrantRefundCreationCommand grantRefundCreationCommand, HttpServletRequest request) throws ExecutionException, InterruptedException {
-        String url="http://localhost:8080/credits/loans/2710620/grant_refunds";
+    @PostMapping(value = "/stress/loan/{loanId}/thread/{threads}/delay/{delay}", produces = "application/json; charset=utf-8")
+    public String stress(@PathVariable("loanId") Long loanId, @PathVariable("delay") int delay, @PathVariable("threads") int threads, @RequestBody GrantRefundCreationCommand grantRefundCreationCommand, HttpServletRequest request) throws ExecutionException, InterruptedException {
+        String url=String.format("http://api.internal.ml.com/credits-alpha/loans/%s/grant_refunds",loanId);
         String json=new Gson().toJson(grantRefundCreationCommand);
         CompletableFuture<String> partialResponse = null;
 
         System.out.println(threads);
         System.out.println(delay);
+        System.out.println(url);
 
         for (int i = 0; i < threads; i++) {
             partialResponse = CompletableFuture.supplyAsync(()->{
@@ -45,8 +46,8 @@ public class StressController {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-Type","application/json");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-            connection.setRequestProperty("x-caller-id", "103555250");
-            connection.setRequestProperty("x-idempotency-key", "1111");
+            connection.setRequestProperty("x-caller-id", "289889080");
+            connection.setRequestProperty("x-idempotency-key", "1");
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.connect();
